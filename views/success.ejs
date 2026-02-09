@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OAuth Success</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 OAuth Success!</h1>
+    <p class="success">Your Shopify store has been authorized successfully!</p>
+    
+    <p><strong>Store:</strong> <%= shop %></p>
+    <p><strong>Token:</strong> <%= accessToken %></p>
+    
+    <div class="info-box">
+      <strong>App Used:</strong> <%= appType %>
+    </div>
+    
+    <p>You can now manage this store from the dashboard.</p>
+    <button onclick="window.location.href='/'">Go to Dashboard</button>
+  </div>
+</body>
+</html>

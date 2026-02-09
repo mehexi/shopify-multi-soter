@@ -1,0 +1,29 @@
+<div id="connect-tab" class="tab-content">
+  <div class="connect-form">
+    <h2>🔐 Connect Store via OAuth</h2>
+    <p>Connect a store using OAuth. The app will automatically use the store's dedicated app credentials if configured.</p>
+    <form action="/install" method="GET" style="margin-top:20px;">
+      <label>Store URL:</label>
+      <input 
+        type="text" 
+        name="shop" 
+        id="connectShopUrl"
+        placeholder="your-store.myshopify.com" 
+        required
+        oninput="checkAppConfig()"
+      />
+      <small style="display:block; margin-bottom:15px; color:#666;">
+        Format: your-store.myshopify.com
+      </small>
+      
+      <div id="appStatusMessage"></div>
+      
+      <button type="submit">🔗 Connect Store via OAuth</button>
+    </form>
+  </div>
+  
+  <div class="manual-setup">
+    <h3>💡 Can't use OAuth? Try Manual Setup</h3>
+    <p>If you're a collaborator or having OAuth issues, use the "Manual Setup" tab for an alternative method.</p>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OAuth Error</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>❌ Error during OAuth</h1>
+    
+    <div class="error-box">
+      <strong>Error:</strong> <%= error %>
+    </div>
+    
+    <h3>Shopify Error Details:</h3>
+    <pre><%= JSON.stringify(details, null, 2) %></pre>
+    
+    <h3>Troubleshooting Steps:</h3>
+    <ol>
+      <li>Check Client Secret: Make sure it's copied correctly</li>
+      <li>Verify App Status in Shopify admin</li>
+      <li>Check Redirect URI matches exactly</li>
+      <li>Try Manual Setup as alternative</li>
+    </ol>
+    
+    <h3>Debug Info:</h3>
+    <p><strong>Store:</strong> <%= shop %></p>
+    <p><strong>Using:</strong> <%= appType %></p>
+    <p><strong>Client ID exists:</strong> <%= hasClientId ? '✅ Yes' : '❌ No' %></p>
+    <p><strong>Client Secret exists:</strong> <%= hasClientSecret ? '✅ Yes' : '❌ No' %></p>
+    
+    <button onclick="window.location.href='/'">← Back to Dashboard</button>
+  </div>
+</body>
+</html>

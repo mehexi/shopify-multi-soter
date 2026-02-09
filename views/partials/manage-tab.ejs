@@ -1,0 +1,25 @@
+<div id="manage-tab" class="tab-content">
+  <% if (storeCount === 0) { %>
+    <div class="no-stores">
+      <h2>No stores connected yet!</h2>
+      <p>Connect a store first to manage it.</p>
+    </div>
+  <% } else { %>
+    <h2>⚙️ Manage Your Stores</h2>
+    <select id="manageStore" style="max-width:400px;">
+      <% stores.forEach(shop => { %>
+        <option value="<%= shop %>"><%= shop %></option>
+      <% }) %>
+      <option value="all">🌐 ALL STORES</option>
+    </select>
+    
+    <h3 style="margin-top:30px;">➕ Add New Product</h3>
+    <input type="text" id="productTitle" placeholder="Product Title" />
+    <input type="text" id="productPrice" placeholder="Price (e.g., 29.99)" />
+    <input type="text" id="productSku" placeholder="SKU (optional)" />
+    <textarea id="productDescription" placeholder="Description (HTML)"></textarea>
+    <button onclick="createProduct()" style="margin-top:10px;">Create Product</button>
+    
+    <div id="manageResult"></div>
+  <% } %>
+</div>

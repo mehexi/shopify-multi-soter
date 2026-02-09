@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shopify Multi-Store Manager</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🏪 Shopify Multi-Store Manager</h1>
+    <p class="subtitle">Connect and manage multiple Shopify stores with different OAuth apps!</p>
+    
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3><%= storeCount %></h3>
+        <p>Connected Stores</p>
+      </div>
+      <div class="stat-card">
+        <h3><%= appCount %></h3>
+        <p>Configured Apps</p>
+      </div>
+    </div>
+    
+    <%- include('partials/tabs') %>
+    <%- include('partials/dashboard-tab') %>
+    <%- include('partials/apps-tab') %>
+    <%- include('partials/connect-tab') %>
+    <%- include('partials/manage-tab') %>
+    <%- include('partials/manual-tab') %>
+    <%- include('partials/delete-tab') %>
+  </div>
+  
+  <script>
+    const configuredApps = <%= configuredApps %>;
+    const hasDefaultApp = <%= hasDefaultApp %>;
+    
+    function checkAppConfig() {
+      const shopUrl = document.getElementById('connectShopUrl').value.trim();
+      const messageDiv = document.getElementById('appStatusMessage');
+      
+      if (!shopUrl) {
+        messageDiv.innerHTML = '';
+        return;
+      }
+      
+      const hasConfiguredApp = configuredApps.includes(shopUrl);
+      
+      if (hasConfiguredApp) {
+        messageDiv.innerHTML = `
+          <div class="info-box">
+            <strong>✅ Dedicated app configured for this store!</strong>
+            <p>This store will use its own OAuth credentials.</p>
+          </div>
+        `;
+      } else if (hasDefaultApp) {
+        messageDiv.innerHTML = `
+          <div class="warning-box">
+            <strong>⚠️ No dedicated app for this store</strong>
+            <p>Will use default app credentials from .env file.</p>
+          </div>
+        `;
+      } else {
+        messageDiv.innerHTML = `
+          <div class="warning-box" style="background: #ffebee; border-left-color: #f44336;">
+            <strong>❌ No OAuth credentials available</strong>
+            <p>Please configure an app in the "Manage Apps" tab.</p>
+          </div>
+        `;
+      }
+    }
+  </script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

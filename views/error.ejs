@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Error</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>❌ <%= title %></h1>
+    <div class="error-box">
+      <strong>Error:</strong>
+      <p><%= message %></p>
+    </div>
+    <% if (shop) { %>
+      <p><strong>Store:</strong> <%= shop %></p>
+    <% } %>
+    <button onclick="window.location.href='/'">← Back to Dashboard</button>
+  </div>
+</body>
+</html>

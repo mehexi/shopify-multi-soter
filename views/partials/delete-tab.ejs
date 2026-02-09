@@ -1,0 +1,25 @@
+<div id="delete-tab" class="tab-content">
+  <% if (storeCount === 0) { %>
+    <div class="no-stores">
+      <h2>No stores connected yet!</h2>
+      <p>Connect a store first to delete themes.</p>
+    </div>
+  <% } else { %>
+    <h2>🗑️ Delete Themes</h2>
+    <div> 
+      <% stores.forEach(shop => { %>
+<button class="btn-danger btn-small" id="shop-btn" onclick="deleteTheme('<%= shop %>')">
+<%= shop %>
+        </button>
+      <% }) %>
+    </div>
+    
+    <h3 style="margin-top:30px;">Delete All Themes</h3>
+    <div class="warning-box">
+      <strong>⚠️ Warning:</strong>
+      <p>This will delete ALL themes from the selected store(s). This action cannot be undone!</p>
+    </div>
+    
+    <div id="deleteResult"></div>
+  <% } %>
+</div>

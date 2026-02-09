@@ -1,0 +1,54 @@
+<div id="dashboard-tab" class="tab-content active">
+  <div class="stores-section">
+    <h2>📋 Connected Stores: <%= storeCount %></h2>
+    <% if (storeCount === 0) { %>
+      <div class="no-stores">
+        <h2>No stores connected yet!</h2>
+        <p>First configure an app, then connect your stores.</p>
+      </div>
+    <% } else { %>
+      <% stores.forEach(shop => { %>
+        <% const hasApp = apps[shop] ? '🔑 Has dedicated app' : '🔓 Using default/manual'; %>
+        <div class="store-card">
+          <div class="store-info">
+            <strong><%= shop %></strong>
+            <small>Token: <%= tokens[shop].substring(0, 20) %>...</small>
+            <small>Connected: <%= new Date(tokens[shop + '_connected_at'] || Date.now()).toLocaleString() %></small>
+            <small><%= hasApp %></small>
+          </div>
+          <button class="btn-danger btn-small" onclick="removeStore('<%= shop %>')">Remove</button>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+  
+  <% if (storeCount > 0) { %>
+    <h2>🎯 View Store Data</h2>
+    <select id="storeSelect" style="max-width:400px;">
+      <% stores.forEach(shop => { %>
+        <option value="<%= shop %>"><%= shop %></option>
+      <% }) %>
+      <option value="all">🌐 ALL STORES</option>
+    </select>
+    
+    <div class="actions-grid">
+      <div class="action-card" onclick="listProducts()">
+        <h3>📦</h3>
+        <h3>Products</h3>
+        <p>View all products</p>
+      </div>
+      <div class="action-card" onclick="listOrders()">
+        <h3>🛒</h3>
+        <h3>Orders</h3>
+        <p>View orders</p>
+      </div>
+      <div class="action-card" onclick="getShopInfo()">
+        <h3>ℹ️</h3>
+        <h3>Shop Info</h3>
+        <p>Store details</p>
+      </div>
+    </div>
+    
+    <div id="result"></div>
+  <% } %>
+</div>

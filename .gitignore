@@ -1,0 +1,6 @@
+node_modules/
+.env
+store-tokens.json
+store-apps.json
+*.log
+.DS_Store

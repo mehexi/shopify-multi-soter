@@ -1,0 +1,59 @@
+<div id="apps-tab" class="tab-content">
+  <div class="info-box">
+    <strong>ℹ️ About Multiple Apps</strong>
+    <p>Each Shopify store can have its own dedicated OAuth app. This is useful when:</p>
+    <ul style="margin-left:20px; margin-top:10px;">
+      <li>You manage stores for different clients</li>
+      <li>Each store owner wants their own app</li>
+      <li>You need different permission scopes per store</li>
+    </ul>
+  </div>
+  
+  <div class="apps-section">
+    <h2>🔑 Configured Apps: <%= appCount %></h2>
+    <% if (appCount === 0) { %>
+      <div class="no-stores">
+        <p>No apps configured yet. Add one below!</p>
+      </div>
+    <% } else { %>
+      <% Object.entries(apps).forEach(([shop, app]) => { %>
+        <div class="app-card">
+          <div class="app-info">
+            <strong><%= shop %></strong>
+            <small>Client ID: <%= app.clientId %></small>
+            <small>Client Secret: <%= app.clientSecret.substring(0, 20) %>...</small>
+          </div>
+          <button class="btn-danger btn-small" onclick="removeApp('<%= shop %>')">Remove</button>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+  
+  <div class="connect-form">
+    <h2>➕ Add New App Configuration</h2>
+    <p>Create a custom app in your Shopify store admin, then add its credentials here.</p>
+    
+    <form onsubmit="addApp(event)">
+      <label>Store URL:</label>
+      <input type="text" id="appShop" placeholder="your-store.myshopify.com" required />
+      
+      <label>OAuth Client ID:</label>
+      <input type="text" id="appClientId" placeholder="From your Shopify app settings" required />
+      
+      <label>OAuth Client Secret:</label>
+      <input type="password" id="appClientSecret" placeholder="From your Shopify app settings" required />
+      
+      <div class="warning-box" style="margin-top:15px;">
+        <strong>⚠️ Important:</strong>
+        <ul style="margin-left:20px; margin-top:10px;">
+          <li>Make sure your OAuth redirect URI in Shopify matches: <code><%= redirectUri %></code></li>
+          <li>Enable the required scopes: read_products, write_products, read_orders, write_orders</li>
+        </ul>
+      </div>
+      
+      <button type="submit" style="margin-top:15px;">💾 Save App Configuration</button>
+    </form>
+    
+    <div id="appResult"></div>
+  </div>
+</div>
