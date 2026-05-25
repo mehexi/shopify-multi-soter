@@ -2,9 +2,22 @@
 <html>
 <head>
   <title>Shopify Multi-Store Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
+<body class="font-sans antialiased">
   <div class="container">
     <h1>🏪 Shopify Multi-Store Manager</h1>
     <p class="subtitle">Connect and manage multiple Shopify stores with different OAuth apps!</p>
@@ -24,6 +37,7 @@
     <%- include('partials/dashboard-tab') %>
     <%- include('partials/apps-tab') %>
     <%- include('partials/connect-tab') %>
+    <%- include('partials/product-tab') %>
     <%- include('partials/manage-tab') %>
     <%- include('partials/manual-tab') %>
     <%- include('partials/delete-tab') %>

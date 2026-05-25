@@ -6,6 +6,11 @@ function switchTab(tab) {
   document.getElementById(tab + '-tab').classList.add('active');
 }
 
+function toggleAddProductForm() {
+  const form = document.getElementById('addProductForm');
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+
 function showResult(html, elementId = 'result') {
   const result = document.getElementById(elementId);
   result.innerHTML = html;
@@ -243,7 +248,124 @@ async function createProduct() {
   }
 }
 
-async function deleteTheme(storeId) {
+async function fetchProduct(storeId) {
+  const store = storeId;
+  
+  if (!store) {
+    showResult('<p class="error-message">⚠️ Please select a store</p>', 'fetchProduct');
+    return;
+  }
+  
+  showResult('⏳ Loading Products...', 'fetchProduct');
+  
+  try {
+    const response = await fetch(`/api/products?store=${encodeURIComponent(store)}`);
+    
+    // Check if response is OK
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    let html = '';
+    
+    if (!data.products || data.products.length === 0) {
+      html = '<p class="no-data">📦 No products found for this store.</p>';
+    } else {
+      html = `
+        <div class="product-header">
+          <h4>Products for: ${store}</h4>
+          <p class="product-count">Total products: ${data.products.length}</p>
+          <buton class="btn-small>Delete All </button>
+        </div>
+        <div class="product-grid" style="display:flex; flex-direction:column; gap:30px">
+      `;
+      
+      data.products.forEach(product => {
+        html += `
+          <div class="product-card" data-product-id="${product.id}">
+            ${product.image ? `<img src="${product.image.src}" alt="${product.title}" class="product-image">` : '<div class="no-image">No Image</div>'}
+            <div class="product-details">
+              <h5 class="product-title">${product.title || 'Untitled Product'}</h5>
+              ${product.price ? `<p class="product-price">$${product.price}</p>` : ''}
+              ${product.status ? `<span class="product-status ${product.status}">${product.status}</span>` : ''}
+            </div>
+            <button 
+              class="btn-danger btn-small" 
+              onclick="deleteProduct('${store}', ${product.id}, '${escapeHtml(product.title)}')">
+              🗑️ Delete
+            </button>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+    }
+    
+    showResult(html, 'fetchProduct');
+    
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    showResult(
+      `<p class="error-message">❌ Error while fetching products: ${error.message}</p>`, 
+      'fetchProduct'
+    );
+  }
+}
+
+// Helper function to escape HTML and prevent XSS
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Delete product function
+async function deleteProduct(store, productId, productTitle) {
+  if (!confirm(`Are you sure you want to delete "${productTitle}"?`)) {
+    return;
+  }
+  
+  showResult(`⏳ Deleting product "${productTitle}"...`, 'fetchProduct');
+  
+  try {
+    const response = await fetch('/api/products/delete', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ store, productId })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    
+    showResult(`✅ Successfully deleted "${productTitle}"`, 'fetchProduct');
+    
+    // Refresh the product list after 1.5 seconds
+    setTimeout(() => {
+      fetchProduct(store);
+      showResult('', 'fetchProduct');
+    }, 1500);
+    
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    showResult(`❌ Error deleting product: ${error.message}`, 'fetchProduct');
+  }
+}
+
+// Helper function to display results
+function showResult(message, elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.innerHTML = message;
+  }
+}
+
+async function fetchTheme(storeId) {
   const store = storeId;
   
   showResult('⏳ Loading themes...', 'deleteResult');
@@ -256,7 +378,6 @@ async function deleteTheme(storeId) {
     });
     
     const data = await response.json();
-    console.log('API Response:', data);
     
     if (store === 'all') {
       let html = '<p class="warning-box">Please select a specific store to delete individual themes.</p>';
@@ -266,6 +387,7 @@ async function deleteTheme(storeId) {
         showResult('<p class="error">❌ Error: ' + data.error + '</p>', 'deleteResult');
       } else {
         let html = '<p class="success">✅ Found ' + data.count + ' theme(s)</p>';
+         html = '<p class="success">' + store + '</p>'
         if (data.themes && data.themes.length > 0) {
           html += '<div style="max-height: 400px; overflow-y: auto; margin-top: 15px;">';
           data.themes.forEach(theme => {

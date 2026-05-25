@@ -8,7 +8,7 @@
     <h2>🗑️ Delete Themes</h2>
     <div> 
       <% stores.forEach(shop => { %>
-<button class="btn-danger btn-small" id="shop-btn" onclick="deleteTheme('<%= shop %>')">
+<button class="btn-danger btn-small" id="shop-btn" onclick="fetchTheme('<%= shop %>')">
 <%= shop %>
         </button>
       <% }) %>

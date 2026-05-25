@@ -12,8 +12,11 @@ class ApiController {
         const results = await ShopifyAPI.multiStoreCall(stores, '/products.json?limit=50');
         res.json(results);
       } else {
-        const data = await ShopifyAPI.call(store, '/products.json?limit=50');
-        res.json(data);
+
+        const {products} = await ShopifyAPI.call(store, '/products.json?limit=50');
+        const {count} = await ShopifyAPI.call(store,"/products/count.json")
+
+        res.json({products,count});
       }
     } catch (error) {
       res.json({ error: error.message });
@@ -243,6 +246,37 @@ static async deleteSingleTheme(req, res) {
     res.json({ 
       error: error.response?.data?.errors || error.message 
     });
+  }
+}
+
+static async deleteProduct(req, res) {
+  try {
+    const { store, productId } = req.body;
+
+    if (!productId) {
+      return res.json({ error: 'Product ID is required' });
+    }
+
+    if (store === 'all') {
+      const stores = Storage.getAllStores();
+      const results = {};
+
+      for (const shop of stores) {
+        try {
+          await ShopifyAPI.call(shop, `/products/${productId}.json`, 'DELETE');
+          results[shop] = { success: true, message: `Product ${productId} deleted` };
+        } catch (error) {
+          results[shop] = { success: false, error: error.message };
+        }
+      }
+
+      res.json(results);
+    } else {
+      await ShopifyAPI.call(store, `/products/${productId}.json`, 'DELETE');
+      res.json({ success: true, message: `Product ${productId} deleted successfully` });
+    }
+  } catch (error) {
+    res.json({ error: error.response?.data?.errors || error.message });
   }
 }
 }

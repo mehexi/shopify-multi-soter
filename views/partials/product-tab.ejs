@@ -1,0 +1,65 @@
+<div id="product-tab" class="tab-content">
+  <% if (storeCount === 0) { %>
+    <div class="no-stores">
+      <h2>No stores connected yet!</h2>
+      <p>Connect a store first to manage products.</p>
+    </div>
+  <% } else { %>
+    <h2>📦 Product Management</h2>
+    
+    <div class="store-buttons">
+      <% stores.forEach((shop, index) => { %>
+        <button 
+          class="btn-danger btn-small shop-btn" 
+          id="shop-btn-<%= index %>" 
+          onclick="fetchProduct('<%= shop %>')"
+          data-shop="<%= shop %>">
+          <%= shop %>
+        </button>
+      <% }) %>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <button class="btn-primary btn-small" onclick="toggleAddProductForm()">
+        ➕ Add Product
+      </button>
+    </div>
+
+    <!-- Add Product Form -->
+    <div id="addProductForm" style="display:none; margin-top: 20px; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+      <h3>Add New Product</h3>
+
+      <div style="display:flex; flex-direction:column; gap:10px; max-width:400px;">
+        <select id="manageStore" class="input-field">
+          <option value="all">All Stores</option>
+          <% stores.forEach(shop => { %>
+            <option value="<%= shop %>"><%= shop %></option>
+          <% }) %>
+        </select>
+
+        <input id="productTitle" type="text" placeholder="Product Title *" class="input-field" />
+        <input id="productPrice" type="number" placeholder="Price *" class="input-field" step="0.01" />
+        <input id="productSku" type="text" placeholder="SKU" class="input-field" />
+        <textarea id="productDescription" placeholder="Description" class="input-field" rows="3"></textarea>
+
+        <button class="btn-primary btn-small" onclick="createProduct()">
+          ✅ Create Product
+        </button>
+      </div>
+
+      <div id="manageResult" style="margin-top: 15px;"></div>
+    </div>
+    
+    <h3 style="margin-top: 30px;">Products</h3>
+    
+    <!-- Product list container -->
+    <div id="productList" class="product-list">
+      <p class="placeholder-text">Select a store to view products</p>
+    </div>
+    
+    <!-- Delete results -->
+    <div id="fetchProduct" style="display:flex; flex-direction:column; gap:30px"></div>
+  <% } %>
+
+    <div id="manualResult"></div>
+</div>
