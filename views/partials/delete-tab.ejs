@@ -5,7 +5,7 @@
       <p>Connect a store first to delete themes.</p>
     </div>
   <% } else { %>
-    <h2>🗑️ Delete Themes</h2>
+    <h2><i data-lucide="trash-2" style="width:20px;height:20px;"></i> Delete Themes</h2>
     <div> 
       <% stores.forEach(shop => { %>
 <button class="btn-danger btn-small" id="shop-btn" onclick="fetchTheme('<%= shop %>')">
@@ -16,7 +16,7 @@
     
     <h3 style="margin-top:30px;">Delete All Themes</h3>
     <div class="warning-box">
-      <strong>⚠️ Warning:</strong>
+      <strong><i data-lucide="alert-triangle" style="width:16px;height:16px;"></i> Warning:</strong>
       <p>This will delete ALL themes from the selected store(s). This action cannot be undone!</p>
     </div>
     

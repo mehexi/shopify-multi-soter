@@ -20,8 +20,8 @@ The `dashboard/` subdirectory is a standalone Next.js 16 app. Read `dashboard/AG
 ## Key commands
 
 ```bash
-npm run dev    # nodemon server.js
-npm start      # node server.js
+npm run dev      # nodemon server.js
+npm start        # node server.js
 ```
 
 No Tailwind build step exists in root. `postcss.config.js` and `tailwind.config.js` exist but `public/css/style.css` is hand-written CSS. The `dashboard/` sub-project handles its own Tailwind v4 build.

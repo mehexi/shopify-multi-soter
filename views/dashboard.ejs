@@ -1,87 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shopify Multi-Store Manager</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-          },
-        },
-      },
-    }
-  </script>
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
-<body class="font-sans antialiased">
-  <div class="container">
-    <h1>🏪 Shopify Multi-Store Manager</h1>
-    <p class="subtitle">Connect and manage multiple Shopify stores with different OAuth apps!</p>
-    
-    <div class="stats-grid">
-      <div class="stat-card">
-        <h3><%= storeCount %></h3>
-        <p>Connected Stores</p>
+<body>
+  <div class="app-layout">
+    <%- include('partials/sidebar') %>
+
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <main class="main-content" id="mainContent">
+      <header class="top-header">
+        <button id="hamburgerBtn" class="hamburger-btn" aria-label="Toggle sidebar">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <h1 id="pageTitle" class="page-title">Dashboard</h1>
+        <div class="header-badges">
+          <button class="manual-topbar-btn" onclick="switchTab('manual')">
+            <i data-lucide="file-text" class="icon-inline"></i> Manual Setup
+          </button>
+          <span class="badge badge-stores"><%= storeCount %> stores</span>
+          <span class="badge badge-apps"><%= appCount %> apps</span>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <%- include('partials/dashboard-tab') %>
+        <%- include('partials/apps-tab') %>
+        <%- include('partials/connect-tab') %>
+        <%- include('partials/product-tab') %>
+        <%- include('partials/manage-tab') %>
+        <%- include('partials/manual-tab') %>
+        <%- include('partials/delete-tab') %>
       </div>
-      <div class="stat-card">
-        <h3><%= appCount %></h3>
-        <p>Configured Apps</p>
-      </div>
-    </div>
-    
-    <%- include('partials/tabs') %>
-    <%- include('partials/dashboard-tab') %>
-    <%- include('partials/apps-tab') %>
-    <%- include('partials/connect-tab') %>
-    <%- include('partials/product-tab') %>
-    <%- include('partials/manage-tab') %>
-    <%- include('partials/manual-tab') %>
-    <%- include('partials/delete-tab') %>
+    </main>
   </div>
-  
-  <script>
-    const configuredApps = <%= configuredApps %>;
-    const hasDefaultApp = <%= hasDefaultApp %>;
-    
-    function checkAppConfig() {
-      const shopUrl = document.getElementById('connectShopUrl').value.trim();
-      const messageDiv = document.getElementById('appStatusMessage');
-      
-      if (!shopUrl) {
-        messageDiv.innerHTML = '';
-        return;
-      }
-      
-      const hasConfiguredApp = configuredApps.includes(shopUrl);
-      
-      if (hasConfiguredApp) {
-        messageDiv.innerHTML = `
-          <div class="info-box">
-            <strong>✅ Dedicated app configured for this store!</strong>
-            <p>This store will use its own OAuth credentials.</p>
-          </div>
-        `;
-      } else if (hasDefaultApp) {
-        messageDiv.innerHTML = `
-          <div class="warning-box">
-            <strong>⚠️ No dedicated app for this store</strong>
-            <p>Will use default app credentials from .env file.</p>
-          </div>
-        `;
-      } else {
-        messageDiv.innerHTML = `
-          <div class="warning-box" style="background: #ffebee; border-left-color: #f44336;">
-            <strong>❌ No OAuth credentials available</strong>
-            <p>Please configure an app in the "Manage Apps" tab.</p>
-          </div>
-        `;
-      }
-    }
-  </script>
+
   <script src="/js/app.js"></script>
+  <script>lucide.createIcons();</script>
 </body>
 </html>

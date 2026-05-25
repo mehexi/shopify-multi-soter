@@ -1,0 +1,49 @@
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-brand">
+      <i data-lucide="store" class="sidebar-brand-icon"></i>
+      <span class="sidebar-title">Multi-Store</span>
+    </div>
+    <button id="sidebarClose" class="sidebar-close"><i data-lucide="x" size="18"></i></button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="sidebar-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+      <i data-lucide="layout-dashboard" class="sidebar-item-icon"></i>
+      <span class="sidebar-item-label">Dashboard</span>
+    </button>
+    <button class="sidebar-item" data-tab="apps" onclick="switchTab('apps')">
+      <i data-lucide="key" class="sidebar-item-icon"></i>
+      <span class="sidebar-item-label">Apps</span>
+    </button>
+    <button class="sidebar-item" data-tab="connect" onclick="switchTab('connect')">
+      <i data-lucide="link" class="sidebar-item-icon"></i>
+      <span class="sidebar-item-label">Connect App</span>
+    </button>
+    <button class="sidebar-item" data-tab="product" onclick="switchTab('product')">
+      <i data-lucide="package" class="sidebar-item-icon"></i>
+      <span class="sidebar-item-label">Products</span>
+    </button>
+    <button class="sidebar-item" data-tab="manage" onclick="switchTab('manage')">
+      <i data-lucide="settings" class="sidebar-item-icon"></i>
+      <span class="sidebar-item-label">Manage</span>
+    </button>
+    <button class="sidebar-item" data-tab="delete" onclick="switchTab('delete')">
+      <i data-lucide="trash-2" class="sidebar-item-icon"></i>
+      <span class="sidebar-item-label">Delete Theme</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-stats">
+      <div class="sidebar-stat">
+        <span class="sidebar-stat-value"><%= storeCount %></span>
+        <span class="sidebar-stat-label">Stores</span>
+      </div>
+      <div class="sidebar-stat">
+        <span class="sidebar-stat-value"><%= appCount %></span>
+        <span class="sidebar-stat-label">Apps</span>
+      </div>
+    </div>
+  </div>
+</aside>

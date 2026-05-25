@@ -5,24 +5,24 @@ const Storage = require('../models/Storage');
 class OAuthController {
   static install(req, res) {
     const { shop } = req.query;
-    
+
     if (!shop) {
       return res.send('❌ Error: Please provide a shop parameter');
     }
-    
+
     if (!shop.endsWith('.myshopify.com')) {
       return res.send('❌ Error: Invalid shop format. Use: your-store.myshopify.com');
     }
-    
+
     const appConfig = Storage.getApp(shop);
     const clientId = appConfig ? appConfig.clientId : config.defaultClientId;
     const clientSecret = appConfig ? appConfig.clientSecret : config.defaultClientSecret;
-    
+
     console.log('\n🔍 OAuth Install Debug:');
     console.log(`   Shop: ${shop}`);
     console.log(`   Has dedicated app config: ${!!appConfig}`);
     console.log(`   Client ID: ${clientId ? clientId.substring(0, 10) + '...' : 'MISSING'}`);
-    
+
     if (!clientId || !clientSecret) {
       return res.render('error', {
         title: 'No OAuth Client ID configured',
@@ -30,10 +30,10 @@ class OAuthController {
         shop
       });
     }
-    
+
     const authUrl = `https://${shop}/admin/oauth/authorize?client_id=${clientId}&scope=${config.scopes}&redirect_uri=${encodeURIComponent(config.redirectUri)}`;
-    
-    console.log(`✅ Redirecting to Shopify OAuth...`);
+
+    console.log('Redirecting to Shopify OAuth...');
     res.redirect(authUrl);
   }
 

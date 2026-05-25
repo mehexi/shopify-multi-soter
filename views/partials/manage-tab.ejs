@@ -5,15 +5,15 @@
       <p>Connect a store first to manage it.</p>
     </div>
   <% } else { %>
-    <h2>⚙️ Manage Your Stores</h2>
+    <h2><i data-lucide="settings" style="width:20px;height:20px;"></i> Manage Your Stores</h2>
     <select id="manageStore" style="max-width:400px;">
       <% stores.forEach(shop => { %>
         <option value="<%= shop %>"><%= shop %></option>
       <% }) %>
-      <option value="all">🌐 ALL STORES</option>
+      <option value="all"><i data-lucide="globe" style="width:14px;height:14px;"></i> ALL STORES</option>
     </select>
     
-    <h3 style="margin-top:30px;">➕ Add New Product</h3>
+    <h3 style="margin-top:30px;"><i data-lucide="plus" style="width:16px;height:16px;"></i> Add New Product</h3>
     <input type="text" id="productTitle" placeholder="Product Title" />
     <input type="text" id="productPrice" placeholder="Price (e.g., 29.99)" />
     <input type="text" id="productSku" placeholder="SKU (optional)" />

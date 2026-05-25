@@ -1,29 +1,77 @@
 <div id="connect-tab" class="tab-content">
-  <div class="connect-form">
-    <h2>🔐 Connect Store via OAuth</h2>
-    <p>Connect a store using OAuth. The app will automatically use the store's dedicated app credentials if configured.</p>
-    <form action="/install" method="GET" style="margin-top:20px;">
-      <label>Store URL:</label>
-      <input 
-        type="text" 
-        name="shop" 
-        id="connectShopUrl"
-        placeholder="your-store.myshopify.com" 
-        required
-        oninput="checkAppConfig()"
-      />
-      <small style="display:block; margin-bottom:15px; color:#666;">
-        Format: your-store.myshopify.com
-      </small>
-      
-      <div id="appStatusMessage"></div>
-      
-      <button type="submit">🔗 Connect Store via OAuth</button>
-    </form>
-  </div>
-  
-  <div class="manual-setup">
-    <h3>💡 Can't use OAuth? Try Manual Setup</h3>
-    <p>If you're a collaborator or having OAuth issues, use the "Manual Setup" tab for an alternative method.</p>
+  <div class="connect-flow">
+    <div class="flow-step">
+      <div class="flow-step-number">1</div>
+      <div class="flow-step-content">
+        <h2>Add App Credentials</h2>
+        <p>Create a custom app in your Shopify store admin, then add its credentials here.</p>
+
+        <form onsubmit="addApp(event)" id="connectAppForm">
+          <label>Store URL</label>
+          <input type="text" id="connectAppShop" placeholder="your-store.myshopify.com" required />
+
+          <label>OAuth Client ID</label>
+          <input type="text" id="connectAppClientId" placeholder="From your Shopify app settings" required />
+
+          <label>OAuth Client Secret</label>
+          <input type="password" id="connectAppClientSecret" placeholder="From your Shopify app settings" required />
+
+          <div class="warning-box" style="margin-top:15px;">
+            <strong><i data-lucide="alert-triangle" style="width:16px;height:16px;"></i> Important</strong>
+            <ul style="margin-left:20px; margin-top:10px;">
+              <li>Make sure your OAuth redirect URI in Shopify matches: <code><%= redirectUri %></code></li>
+              <li>Enable scopes: read_products, write_products, read_orders, write_orders</li>
+            </ul>
+          </div>
+
+          <button type="submit" class="btn-primary" style="margin-top:16px;"><i data-lucide="save" style="width:16px;height:16px;"></i> Save App &amp; Continue</button>
+        </form>
+
+        <div id="connectAppResult"></div>
+      </div>
+    </div>
+
+    <div id="connectStep2" class="flow-step" style="display:none;">
+      <div class="flow-step-number">2</div>
+      <div class="flow-step-content">
+        <h2>Connect Store via OAuth</h2>
+        <p id="connectStep2Message">App saved! Now connect your store using OAuth.</p>
+        <form action="/install" method="GET" id="connectOAuthForm">
+          <label>Store URL</label>
+          <input type="text" name="shop" id="connectShopUrl" placeholder="your-store.myshopify.com" required />
+          <button type="submit"><i data-lucide="link" style="width:16px;height:16px;"></i> Connect Store via OAuth</button>
+        </form>
+        <p style="margin-top:12px; color:var(--text-secondary); font-size:13px;">
+          You'll be redirected to Shopify to authorize the app.
+        </p>
+      </div>
+    </div>
+
+    <div class="configured-apps-section">
+      <h2>Configured Apps</h2>
+      <% if (appCount === 0) { %>
+        <div class="no-stores">
+          <p>No apps configured yet. Add one above.</p>
+        </div>
+      <% } else { %>
+        <div id="connectAppList">
+          <% Object.entries(apps).forEach(([shop, app]) => { %>
+            <div class="app-card" data-shop="<%= shop %>">
+              <div class="app-info">
+                <strong><%= shop %></strong>
+                <small>Client ID: <%= app.clientId.substring(0, 16) %>...</small>
+                <small>Connected: <%= tokens[shop] ? '<i data-lucide="check-circle" style="width:14px;height:14px;color:var(--accent-success);"></i>' : '<i data-lucide="x-circle" style="width:14px;height:14px;color:var(--accent-danger);"></i>' %></small>
+              </div>
+              <div class="app-card-actions">
+                <% if (!tokens[shop]) { %>
+                  <a href="/install?shop=<%= shop %>" class="btn btn-small"><i data-lucide="link" style="width:14px;height:14px;"></i> Connect</a>
+                <% } %>
+                <button class="btn-danger btn-small" onclick="removeApp('<%= shop %>')">Remove</button>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
   </div>
 </div>

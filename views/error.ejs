@@ -16,10 +16,11 @@
     }
   </script>
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body class="font-sans antialiased">
   <div class="container">
-    <h1>❌ Error during OAuth</h1>
+    <h1><i data-lucide="x-circle" style="width:24px;height:24px;"></i> Error during OAuth</h1>
 
     <div class="error-box">
       <strong>Error:</strong> <%= error %>
@@ -39,10 +40,11 @@
     <h3>Debug Info:</h3>
     <p><strong>Store:</strong> <%= shop %></p>
     <p><strong>Using:</strong> <%= appType %></p>
-    <p><strong>Client ID exists:</strong> <%= hasClientId ? '✅ Yes' : '❌ No' %></p>
-    <p><strong>Client Secret exists:</strong> <%= hasClientSecret ? '✅ Yes' : '❌ No' %></p>
+    <p><strong>Client ID exists:</strong> <%= hasClientId ? '<i data-lucide="check-circle" style="width:14px;height:14px;color:var(--accent-success);"></i> Yes' : '<i data-lucide="x-circle" style="width:14px;height:14px;color:var(--accent-danger);"></i> No' %></p>
+    <p><strong>Client Secret exists:</strong> <%= hasClientSecret ? '<i data-lucide="check-circle" style="width:14px;height:14px;color:var(--accent-success);"></i> Yes' : '<i data-lucide="x-circle" style="width:14px;height:14px;color:var(--accent-danger);"></i> No' %></p>
 
-    <button onclick="window.location.href='/'">← Back to Dashboard</button>
+    <button onclick="window.location.href='/'" style="margin-top:20px;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back to Dashboard</button>
   </div>
+  <script>lucide.createIcons();</script>
 </body>
 </html>

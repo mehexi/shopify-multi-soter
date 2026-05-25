@@ -16,10 +16,11 @@
     }
   </script>
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body class="font-sans antialiased">
   <div class="container">
-    <h1>❌ <%= title %></h1>
+    <h1><i data-lucide="x-circle" style="width:24px;height:24px;"></i> <%= title %></h1>
     <div class="error-box">
       <strong>Error:</strong>
       <p><%= message %></p>
@@ -27,7 +28,8 @@
     <% if (shop) { %>
       <p><strong>Store:</strong> <%= shop %></p>
     <% } %>
-    <button onclick="window.location.href='/'">← Back to Dashboard</button>
+    <button onclick="window.location.href='/'" style="margin-top:20px;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i> Back to Dashboard</button>
   </div>
+  <script>lucide.createIcons();</script>
 </body>
 </html>

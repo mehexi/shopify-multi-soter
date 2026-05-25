@@ -8,7 +8,7 @@ class DashboardController {
     const storeCount = stores.length;
     const appCount = Object.keys(apps).length;
     const tokens = Storage.loadTokens();
-    
+
     res.render('dashboard', {
       stores,
       apps,

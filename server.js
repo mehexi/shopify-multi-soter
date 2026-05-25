@@ -24,25 +24,13 @@ app.use('/', require('./routes/store'));
 app.listen(config.port, () => {
   const stores = Storage.getAllStores();
   const apps = Storage.getAllApps();
-  
-  console.log('\n╔══════════════════════════════════════════════════╗');
-  console.log('\n║   🏪 Shopify Multi-Store Manager (Multi-App)     ║');
-  console.log('\n╚══════════════════════════════════════════════════╝\n');
-  console.log(`📍 Dashboard: http://localhost:${config.port}`);
-  console.log(`🔗 OAuth Redirect: ${config.redirectUri}`);
-  console.log(`🏪 Connected Stores: ${stores.length}`);
-  console.log(`🔑 Configured Apps: ${Object.keys(apps).length}\n`);
-  console.log('✨ Features:');
-  console.log('   • Multiple OAuth apps per store');
-  console.log('   • Connect stores via OAuth');
-  console.log('   • Add stores manually (for collaborators)');
-  console.log('   • View products, orders, shop info');
-  console.log('   • Create products across multiple stores');
-  console.log('   • Multi-store operations\n');
-  console.log('🔐 To get started:');
-  console.log(`   1. Visit: http://localhost:${config.port}`);
-  console.log('   2. Go to "Manage Apps" tab');
-  console.log('   3. Configure OAuth credentials for each store');
-  console.log('   4. Connect stores via OAuth\n');
-  console.log('════════════════════════════════════════════════\n');
+
+  console.log('\n');
+  console.log('  Shopify Multi-Store Manager');
+  console.log('\n');
+  console.log('Dashboard: http://localhost:' + config.port);
+  console.log('OAuth Redirect: ' + config.redirectUri);
+  console.log('Connected Stores: ' + stores.length);
+  console.log('Configured Apps: ' + Object.keys(apps).length);
+  console.log('\n');
 });

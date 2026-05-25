@@ -1,54 +1,113 @@
 <div id="dashboard-tab" class="tab-content active">
-  <div class="stores-section">
-    <h2>📋 Connected Stores: <%= storeCount %></h2>
-    <% if (storeCount === 0) { %>
-      <div class="no-stores">
-        <h2>No stores connected yet!</h2>
-        <p>First configure an app, then connect your stores.</p>
-      </div>
-    <% } else { %>
-      <% stores.forEach(shop => { %>
-        <% const hasApp = apps[shop] ? '🔑 Has dedicated app' : '🔓 Using default/manual'; %>
-        <div class="store-card">
-          <div class="store-info">
-            <strong><%= shop %></strong>
-            <small>Token: <%= tokens[shop].substring(0, 20) %>...</small>
-            <small>Connected: <%= new Date(tokens[shop + '_connected_at'] || Date.now()).toLocaleString() %></small>
-            <small><%= hasApp %></small>
-          </div>
-          <button class="btn-danger btn-small" onclick="removeStore('<%= shop %>')">Remove</button>
-        </div>
-      <% }) %>
-    <% } %>
-  </div>
-  
-  <% if (storeCount > 0) { %>
-    <h2>🎯 View Store Data</h2>
-    <select id="storeSelect" style="max-width:400px;">
-      <% stores.forEach(shop => { %>
-        <option value="<%= shop %>"><%= shop %></option>
-      <% }) %>
-      <option value="all">🌐 ALL STORES</option>
-    </select>
-    
-    <div class="actions-grid">
-      <div class="action-card" onclick="listProducts()">
-        <h3>📦</h3>
-        <h3>Products</h3>
-        <p>View all products</p>
-      </div>
-      <div class="action-card" onclick="listOrders()">
-        <h3>🛒</h3>
-        <h3>Orders</h3>
-        <p>View orders</p>
-      </div>
-      <div class="action-card" onclick="getShopInfo()">
-        <h3>ℹ️</h3>
-        <h3>Shop Info</h3>
-        <p>Store details</p>
+  <div class="dash-stats">
+    <div class="dash-stat dash-stat-primary">
+      <i data-lucide="store" class="dash-stat-icon"></i>
+      <div class="dash-stat-body">
+        <span class="dash-stat-value"><%= storeCount %></span>
+        <span class="dash-stat-label">Connected Stores</span>
       </div>
     </div>
-    
-    <div id="result"></div>
+    <div class="dash-stat dash-stat-accent">
+      <i data-lucide="key" class="dash-stat-icon"></i>
+      <div class="dash-stat-body">
+        <span class="dash-stat-value"><%= appCount %></span>
+        <span class="dash-stat-label">Configured Apps</span>
+      </div>
+    </div>
+    <div class="dash-stat dash-stat-success">
+      <i data-lucide="check-circle" class="dash-stat-icon"></i>
+      <div class="dash-stat-body">
+        <span class="dash-stat-value"><%= stores.filter(s => apps[s]).length %></span>
+        <span class="dash-stat-label">Apps Connected</span>
+      </div>
+    </div>
+    <div class="dash-stat dash-stat-info">
+      <i data-lucide="calendar" class="dash-stat-icon"></i>
+      <div class="dash-stat-body">
+        <span class="dash-stat-value"><%= storeCount > 0 ? new Date(Math.max(...stores.map(s => new Date(tokens[s + '_connected_at'] || 0)))).toLocaleDateString() : '—' %></span>
+        <span class="dash-stat-label">Latest Connection</span>
+      </div>
+    </div>
+  </div>
+
+  <% if (storeCount === 0) { %>
+    <div class="no-stores">
+      <i data-lucide="store" style="width:64px;height:64px;color:var(--text-muted);margin-bottom:20px;"></i>
+      <h2>No stores connected yet</h2>
+      <p style="color:var(--text-muted); margin-bottom:20px;">Connect your first store to get started managing your Shopify stores.</p>
+      <a href="#" class="btn" onclick="switchTab('connect'); return false;"><i data-lucide="plus" style="width:16px;height:16px;"></i> Connect Your First Store</a>
+    </div>
+  <% } else { %>
+    <div class="dash-toolbar">
+      <div class="dash-search">
+        <i data-lucide="search" class="dash-search-icon"></i>
+        <input type="text" id="storeSearch" class="dash-search-input" placeholder="Search stores by name..." oninput="filterStores()" />
+      </div>
+      <div class="dash-sort">
+        <select id="storeSort" class="dash-sort-select" onchange="sortStores()">
+          <option value="name">Sort by Name</option>
+          <option value="recent">Sort by Recent</option>
+          <option value="oldest">Sort by Oldest</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="dash-grid" id="storeGrid">
+      <% 
+        const sorted = [...stores].sort((a, b) => {
+          const nameA = a.replace('.myshopify.com', '');
+          const nameB = b.replace('.myshopify.com', '');
+          return nameA.localeCompare(nameB);
+        });
+      %>
+      <% sorted.forEach(shop => { %>
+        <% 
+          const friendlyName = shop.replace('.myshopify.com', '');
+          const connectedAt = tokens[shop + '_connected_at'];
+          const date = connectedAt ? new Date(connectedAt) : null;
+          const dateStr = date ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown';
+          const hasApp = !!apps[shop];
+        %>
+        <div class="dash-card" data-shop="<%= shop %>" data-date="<%= date ? date.getTime() : 0 %>">
+          <div class="dash-card-row">
+            <div class="dash-card-icon"><%= friendlyName.charAt(0).toUpperCase() %></div>
+            <div class="dash-card-name"><%= friendlyName %></div>
+            <div class="dash-card-actions">
+              <button class="da-btn" onclick="quickAction('<%= shop %>', 'products')" title="Products"><i data-lucide="package" style="width:14px;height:14px;"></i></button>
+              <button class="da-btn" onclick="quickAction('<%= shop %>', 'orders')" title="Orders"><i data-lucide="shopping-cart" style="width:14px;height:14px;"></i></button>
+              <button class="da-btn" onclick="quickAction('<%= shop %>', 'info')" title="Shop Info"><i data-lucide="info" style="width:14px;height:14px;"></i></button>
+              <a href="/install?shop=<%= shop %>" class="da-btn" title="Reconnect"><i data-lucide="link" style="width:14px;height:14px;"></i></a>
+              <button class="da-btn da-btn-danger" onclick="removeStore('<%= shop %>')" title="Remove store"><i data-lucide="x" style="width:14px;height:14px;"></i></button>
+            </div>
+          </div>
+          <div class="dash-card-row dash-card-sub">
+            <span><%= dateStr %></span>
+            <span class="dash-card-sep">·</span>
+            <% if (hasApp) { %><span class="dash-card-status-ok">App configured</span><% } else { %><span class="dash-card-status-warn">No app</span><% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="dash-data-section">
+      <div class="dash-data-header">
+        <h2>Store Data Lookup</h2>
+        <p>Select a store to view its products, orders, and shop information.</p>
+      </div>
+      <div class="dash-data-controls">
+        <select id="storeSelect" class="dash-data-select">
+          <% sorted.forEach(shop => { %>
+            <option value="<%= shop %>"><%= shop.replace('.myshopify.com', '') %></option>
+          <% }) %>
+          <option value="all"><i data-lucide="globe"></i> All Stores</option>
+        </select>
+        <div class="dash-data-buttons">
+          <button class="btn btn-small" onclick="listProducts()"><i data-lucide="package" style="width:14px;height:14px;"></i> Products</button>
+          <button class="btn btn-small" onclick="listOrders()"><i data-lucide="shopping-cart" style="width:14px;height:14px;"></i> Orders</button>
+          <button class="btn btn-small" onclick="getShopInfo()"><i data-lucide="info" style="width:14px;height:14px;"></i> Shop Info</button>
+        </div>
+      </div>
+      <div id="result"></div>
+    </div>
   <% } %>
 </div>

@@ -20,9 +20,9 @@ class Storage {
   static saveTokens(tokens) {
     try {
       fs.writeFileSync(TOKENS_FILE, JSON.stringify(tokens, null, 2));
-      console.log('✅ Tokens saved');
+      console.log('Tokens saved');
     } catch (error) {
-      console.error('❌ Error saving tokens:', error);
+      console.error('Error saving tokens:', error);
     }
   }
 
@@ -65,9 +65,9 @@ class Storage {
   static saveApps(apps) {
     try {
       fs.writeFileSync(APPS_FILE, JSON.stringify(apps, null, 2));
-      console.log('✅ Apps saved');
+      console.log('Apps saved');
     } catch (error) {
-      console.error('❌ Error saving apps:', error);
+      console.error('Error saving apps:', error);
     }
   }
 
